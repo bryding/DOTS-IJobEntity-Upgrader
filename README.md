@@ -2,7 +2,7 @@
 
 NOTE: This tool is no longer required as of the Entities pre-1.0 release
 
-Adjusts IJobEntity object initializers to not use inlined SystemAPI calls, since the geniuses over at Unity thought it'd be great if we couldn't just pass inlined component/buffer lookup calls to IJobEntity object initializers. 
+Adjusts IJobEntity object initializers to not use inlined SystemAPI calls.
 
 
 For example, in your system, you initialize an IJobEntity struct like this:
