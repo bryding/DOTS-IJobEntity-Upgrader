@@ -1,5 +1,7 @@
 # DOTS IJobEntity Upgrader
 
+NOTE: This tool is no longer required as of the Entities pre-1.0 release
+
 Adjusts IJobEntity object initializers to not use inlined SystemAPI calls, since the geniuses over at Unity thought it'd be great if we couldn't just pass inlined component/buffer lookup calls to IJobEntity object initializers. 
 
 
@@ -39,7 +41,7 @@ Simply run
   -h, --help            show this help message and exit
 
   --dir DIR             The top level directory containing all of the .cs files that need to be updated. (default: None)
-  
+
   --commit {true,false}
                         Set to false to merely print out potential results, no files will be changed. True will update the files (default: false)
 
