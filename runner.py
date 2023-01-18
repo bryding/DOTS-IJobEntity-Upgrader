@@ -3,7 +3,7 @@ import os
 
 def main():
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('--dir', default="sandbox", help="The top level directory containing all of the .cs files that need to be updated.")
+    parser.add_argument('--dir', required='true', help="The top level directory containing all of the .cs files that need to be updated.")
     parser.add_argument('--commit', default='false', choices=['true', 'false'], help="Set to false to merely print out potential results, no files will be changed. True will update the files")
 
     args = parser.parse_args()
@@ -14,9 +14,9 @@ def main():
         if file.lower().endswith('.cs'):
           filePath = os.path.join(subdir, file).replace("\\","/")
           if needsUpgrade(filePath):
-            processFile(filePath)
+            processFile(filePath, commit)
 
-def processFile(filePath):
+def processFile(filePath, commit):
   print(f'Processing file: {filePath}')
   
   # Read the file into a list of strings
@@ -37,6 +37,12 @@ def processFile(filePath):
   if start == end or start > end or end - start == 1:
     print(f'No changes needed for file: {filePath}')
     return
+  
+  if ("{" in data[start]):
+    #remove the element at the start index
+    data.pop(start)
+    #decrement the end index by 1
+    end -= 1
 
   # for each line in the range of start to end, get the index of the first word after the tab
   for i in range(start, end):
@@ -66,7 +72,12 @@ def processFile(filePath):
 
 
   # Print the lines
-  print(*data, sep='')
+  if commit:
+    with open(filePath, "w", encoding="utf-8") as file:
+      for line in data:
+        file.write(line)
+  else:
+    print(*data, sep='')
   return
 
 # Given a list of strings that correspond to the lines of a c# file and an index where an object is being initialized, return the start and end index of the object's brackets
@@ -99,7 +110,7 @@ def needsUpgrade(filePath):
     data = file.read()
   
   # Check if the file contains the word, 'IJobEntity'
-  if 'IJobEntity' in data:
+  if 'IJobEntity' in data and ('PerformSystemUpdate' in data or 'OnUpdate' in data):
     return True
   return False
 
